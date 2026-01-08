@@ -19,7 +19,7 @@ export default function DataTable({ data }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
 
-  const columns: Array<{ key: keyof Paper; label: string }> = [
+  const columns: Array<{ key: keyof Paper; label: string }> = useMemo(() => [
     { key: 'title', label: 'Title' },
     { key: 'author', label: 'Author(s)' },
     { key: 'venue_name', label: 'Venue' },
@@ -27,7 +27,7 @@ export default function DataTable({ data }: DataTableProps) {
     { key: 'url', label: 'URL' },
     { key: 'code', label: 'Code' },
     { key: 'crawl_timestamp', label: 'Crawl Timestamp' },
-  ]
+  ], [])
 
   // Filter and sort data
   const filteredAndSortedData = useMemo(() => {

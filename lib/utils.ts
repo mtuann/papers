@@ -53,8 +53,8 @@ export async function loadPapersData(topic: string): Promise<Paper[]> {
         complete: (results) => {
           resolve(results.data as Paper[])
         },
-        error: (error) => {
-          reject(error)
+        error: (error: unknown) => {
+          reject(error instanceof Error ? error : new Error(String(error)))
         },
       })
     })

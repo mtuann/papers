@@ -17,7 +17,7 @@ export default function Home() {
     if (topics.length > 0 && !topics.includes(selectedTopic)) {
       setSelectedTopic(topics[0])
     }
-  }, [])
+  }, [selectedTopic])
 
   useEffect(() => {
     const fetchData = async () => {
