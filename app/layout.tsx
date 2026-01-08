@@ -20,7 +20,7 @@ export default function RootLayout({
         <Script
           id="clustrmaps"
           strategy="lazyOnload"
-          src="https://clustrmaps.com/map_v2.js?d=7-Udvej828PGj6gVsaVm-bV7Pu4M0wfCk72xPaD7RNM&cl=ffffff&w=300"
+          src="https://clustrmaps.com/map_v2.js?d=7-Udvej828PGj6gVsaVm-bV7Pu4M0wfCk72xPaD7RNM&cl=ffffff&w=a"
         />
       </body>
     </html>

@@ -52,20 +52,25 @@ export default function Home() {
               The data is sourced from IEEE Xplore, ACM, ScienceDirect, Springer, OpenReview, arXiv, DBLP, OpenAlex, and Google Scholar.
             </p>
 
-            {/* Topic Selection */}
-            <div className="flex items-center gap-3 mb-4">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
-              <select
-                value={selectedTopic}
-                onChange={(e) => setSelectedTopic(e.target.value)}
-                className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
-              >
-                {topics.map((topic) => (
-                  <option key={topic} value={topic}>
-                    {formatTopicName(topic)}
-                  </option>
-                ))}
-              </select>
+            {/* Topic Selection and ClustrMaps */}
+            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
+                <select
+                  value={selectedTopic}
+                  onChange={(e) => setSelectedTopic(e.target.value)}
+                  className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
+                >
+                  {topics.map((topic) => (
+                    <option key={topic} value={topic}>
+                      {formatTopicName(topic)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex justify-center" id="clustrmaps-container">
+                {/* ClustrMaps will inject the map here */}
+              </div>
             </div>
 
             <p className="text-gray-700 text-lg">
@@ -121,13 +126,10 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer with ClustrMaps */}
+      {/* Footer */}
       <footer className="mt-12 py-8 px-4 lg:px-8 border-t border-purple-200/30">
         <div className="max-w-full mx-auto">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <div className="flex justify-center" id="clustrmaps-container">
-              {/* ClustrMaps will inject the map here */}
-            </div>
+          <div className="flex flex-col items-center justify-center">
             <p className="text-gray-600 text-sm text-center">
               © {new Date().getFullYear()} MTUANN. All rights reserved.
             </p>
