@@ -69,30 +69,29 @@ body {
   display: inline-block;
 }
 
-/* ClustrMaps container styling - constrain size to fit box */
+/* ClustrMaps container styling - small size at bottom */
 #clustrmaps-container {
-  max-width: 300px;
-  max-height: 300px;
-  width: 100%;
-  height: auto;
+  width: 200px;
+  height: 150px;
   overflow: hidden;
   border-radius: 8px;
+  margin: 0 auto;
+  position: relative;
 }
 
 #clustrmaps-container iframe,
 #clustrmaps-container > div,
 #clustrmaps-container > a {
-  max-width: 100% !important;
-  max-height: 300px !important;
-  width: 100% !important;
-  height: auto !important;
+  width: 200px !important;
+  height: 150px !important;
+  max-width: 200px !important;
+  max-height: 150px !important;
   display: block !important;
+  border: none !important;
 }
 
-/* Hide any ClustrMaps that appear outside the container */
-body > iframe[src*="clustrmaps"],
-body > div[id*="clustrmaps"]:not(#clustrmaps-container),
-footer iframe[src*="clustrmaps"],
-footer div[id*="clustrmaps"] {
+/* Ensure only one ClustrMaps instance exists */
+body > iframe[src*="clustrmaps"]:not(#clustrmaps-container iframe),
+body > div[id*="clustrmaps"]:not(#clustrmaps-container):not(#clustrmaps-container > *) {
   display: none !important;
 }

@@ -21,7 +21,7 @@ export default function Home() {
     }
   }, [selectedTopic])
 
-  // Ensure ClustrMaps renders in the correct container and remove duplicates
+  // Ensure ClustrMaps renders in the footer container and remove duplicates
   useEffect(() => {
     const container = document.getElementById('clustrmaps-container')
     
@@ -34,18 +34,12 @@ export default function Home() {
       allMaps.forEach((map) => {
         const element = map as HTMLElement
         
-        // If it's already in our container, keep it
+        // If it's already in our footer container, keep it
         if (container.contains(element)) {
           return
         }
         
-        // If it's in the footer or body directly, remove it
-        if (element.closest('footer') || element.parentElement === document.body) {
-          element.remove()
-          return
-        }
-        
-        // Otherwise, move it to our container (only if container is empty)
+        // If it's not in the footer, move it there (only if container is empty)
         if (container.children.length === 0) {
           container.appendChild(element)
         } else {
@@ -89,48 +83,38 @@ export default function Home() {
       <main className="flex-1 pt-20 lg:pt-24 p-4 lg:p-8 overflow-x-hidden w-full">
         <div className="w-full">
           <div className="mb-6 glass-effect rounded-2xl p-6 shadow-xl border-2 border-purple-200/50">
-            <div className="flex flex-col lg:flex-row gap-6 items-start">
-              {/* Left side: Content */}
-              <div className="flex-1">
-                <p className="text-gray-600 text-sm mb-4 italic">
-                  The data is sourced from IEEE Xplore, ACM, ScienceDirect, Springer, OpenReview, arXiv, DBLP, OpenAlex, and Google Scholar.
-                </p>
+            <div className="flex-1">
+              <p className="text-gray-600 text-sm mb-4 italic">
+                The data is sourced from IEEE Xplore, ACM, ScienceDirect, Springer, OpenReview, arXiv, DBLP, OpenAlex, and Google Scholar.
+              </p>
 
-                {/* Topic Selection - back to original position */}
-                <div className="flex items-center gap-3 mb-4">
-                  <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
-                  <select
-                    value={selectedTopic}
-                    onChange={(e) => setSelectedTopic(e.target.value)}
-                    className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
-                  >
-                    {topics.map((topic) => (
-                      <option key={topic} value={topic}>
-                        {formatTopicName(topic)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <p className="text-gray-700 text-lg">
-                  Browse and search through research papers on{' '}
-                  <span className="font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    {formatTopicName(selectedTopic)}
-                  </span>
-                </p>
-                {!loading && !error && papers.length > 0 && (
-                  <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full">
-                    <span className="text-purple-700 font-semibold">📚 Total: {papers.length} papers</span>
-                  </div>
-                )}
+              {/* Topic Selection */}
+              <div className="flex items-center gap-3 mb-4">
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
+                <select
+                  value={selectedTopic}
+                  onChange={(e) => setSelectedTopic(e.target.value)}
+                  className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
+                >
+                  {topics.map((topic) => (
+                    <option key={topic} value={topic}>
+                      {formatTopicName(topic)}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* Right side: ClustrMaps */}
-              <div className="flex-shrink-0 lg:ml-auto">
-                <div id="clustrmaps-container" className="flex justify-center w-[300px] h-[300px] overflow-hidden rounded-lg">
-                  {/* ClustrMaps will inject the map here */}
+              <p className="text-gray-700 text-lg">
+                Browse and search through research papers on{' '}
+                <span className="font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  {formatTopicName(selectedTopic)}
+                </span>
+              </p>
+              {!loading && !error && papers.length > 0 && (
+                <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full">
+                  <span className="text-purple-700 font-semibold">📚 Total: {papers.length} papers</span>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -177,7 +161,10 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-12 py-8 px-4 lg:px-8 border-t border-purple-200/30">
         <div className="max-w-full mx-auto">
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div id="clustrmaps-container" className="flex justify-center">
+              {/* ClustrMaps will inject the map here */}
+            </div>
             <p className="text-gray-600 text-sm text-center">
               © {new Date().getFullYear()} MTUANN. All rights reserved.
             </p>
