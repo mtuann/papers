@@ -125,12 +125,12 @@ export default function Home() {
       <footer className="mt-12 py-8 px-4 lg:px-8 border-t border-purple-200/30">
         <div className="max-w-full mx-auto">
           <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex justify-center" id="clustrmaps-container">
+              {/* ClustrMaps will inject the map here */}
+            </div>
             <p className="text-gray-600 text-sm text-center">
               © {new Date().getFullYear()} MTUANN. All rights reserved.
             </p>
-            <div className="flex justify-center w-full" id="clustrmaps-container">
-              {/* ClustrMaps will inject the map here */}
-            </div>
           </div>
         </div>
       </footer>
