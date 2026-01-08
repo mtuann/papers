@@ -21,26 +21,44 @@ export default function Home() {
     }
   }, [selectedTopic])
 
-  // Ensure ClustrMaps renders in the correct container
+  // Ensure ClustrMaps renders in the correct container and remove duplicates
   useEffect(() => {
-    // Wait for the script to load and ensure it targets the correct container
-    const checkAndMoveMap = () => {
-      const container = document.getElementById('clustrmaps-container')
-      if (container) {
-        // Find any ClustrMaps iframe or div that might have been injected elsewhere
-        const maps = document.querySelectorAll('iframe[src*="clustrmaps"], div[id*="clustrmaps"]')
-        maps.forEach((map) => {
-          if (map.parentElement !== container) {
-            container.appendChild(map)
-          }
-        })
-      }
+    const container = document.getElementById('clustrmaps-container')
+    
+    const checkAndFixMap = () => {
+      if (!container) return
+      
+      // Find all ClustrMaps elements
+      const allMaps = document.querySelectorAll('iframe[src*="clustrmaps"], div[id*="clustrmaps"], a[href*="clustrmaps"]')
+      
+      allMaps.forEach((map) => {
+        const element = map as HTMLElement
+        
+        // If it's already in our container, keep it
+        if (container.contains(element)) {
+          return
+        }
+        
+        // If it's in the footer or body directly, remove it
+        if (element.closest('footer') || element.parentElement === document.body) {
+          element.remove()
+          return
+        }
+        
+        // Otherwise, move it to our container (only if container is empty)
+        if (container.children.length === 0) {
+          container.appendChild(element)
+        } else {
+          // If container already has content, remove this duplicate
+          element.remove()
+        }
+      })
     }
-
+    
     // Check periodically after script loads
-    const interval = setInterval(checkAndMoveMap, 500)
-    setTimeout(() => clearInterval(interval), 10000) // Stop after 10 seconds
-
+    const interval = setInterval(checkAndFixMap, 500)
+    setTimeout(() => clearInterval(interval), 15000) // Stop after 15 seconds
+    
     return () => clearInterval(interval)
   }, [])
 
@@ -109,7 +127,7 @@ export default function Home() {
 
               {/* Right side: ClustrMaps */}
               <div className="flex-shrink-0 lg:ml-auto">
-                <div id="clustrmaps-container" className="flex justify-center">
+                <div id="clustrmaps-container" className="flex justify-center w-[300px] h-[300px] overflow-hidden rounded-lg">
                   {/* ClustrMaps will inject the map here */}
                 </div>
               </div>

@@ -68,3 +68,31 @@ body {
 .strip-html {
   display: inline-block;
 }
+
+/* ClustrMaps container styling - constrain size to fit box */
+#clustrmaps-container {
+  max-width: 300px;
+  max-height: 300px;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+#clustrmaps-container iframe,
+#clustrmaps-container > div,
+#clustrmaps-container > a {
+  max-width: 100% !important;
+  max-height: 300px !important;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+}
+
+/* Hide any ClustrMaps that appear outside the container */
+body > iframe[src*="clustrmaps"],
+body > div[id*="clustrmaps"]:not(#clustrmaps-container),
+footer iframe[src*="clustrmaps"],
+footer div[id*="clustrmaps"] {
+  display: none !important;
+}
