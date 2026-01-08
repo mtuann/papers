@@ -37,7 +37,9 @@ export function extractLinks(html: string): Array<{ text: string; url: string }>
 
 export async function loadPapersData(topic: string): Promise<Paper[]> {
   try {
-    const response = await fetch(`/data/paper_${topic}.csv`)
+    // Use relative path for static export - Next.js handles basePath automatically
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+    const response = await fetch(`${basePath}/data/paper_${topic}.csv`)
     if (!response.ok) {
       throw new Error(`Failed to load data for topic: ${topic}`)
     }
