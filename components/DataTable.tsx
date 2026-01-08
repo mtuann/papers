@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { Paper, stripHtmlTags, extractLinks } from '@/lib/utils'
+import { useState, useMemo, useEffect, useCallback } from 'react'
+import { Paper, stripHtmlTags, extractLinks, extractListItems, exportToCSV } from '@/lib/utils'
 
 interface DataTableProps {
   data: Paper[]
@@ -14,10 +14,21 @@ type SortConfig = {
 
 export default function DataTable({ data }: DataTableProps) {
   const [globalSearch, setGlobalSearch] = useState('')
+  const [debouncedGlobalSearch, setDebouncedGlobalSearch] = useState('')
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' })
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(200)
+
+  // Debounce global search for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedGlobalSearch(globalSearch)
+      setCurrentPage(1) // Reset to first page when search changes
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [globalSearch])
 
   const columns: Array<{ key: keyof Paper; label: string }> = useMemo(() => [
     { key: 'title', label: 'Title' },
@@ -33,9 +44,9 @@ export default function DataTable({ data }: DataTableProps) {
   const filteredAndSortedData = useMemo(() => {
     let filtered = [...data]
 
-    // Apply global search
-    if (globalSearch.trim()) {
-      const searchLower = globalSearch.toLowerCase().trim()
+    // Apply global search (using debounced value)
+    if (debouncedGlobalSearch.trim()) {
+      const searchLower = debouncedGlobalSearch.toLowerCase().trim()
       filtered = filtered.filter((row) =>
         columns.some((col) => {
           const value = row[col.key] || ''
@@ -125,7 +136,7 @@ export default function DataTable({ data }: DataTableProps) {
     }
 
     return filtered
-  }, [data, globalSearch, columnFilters, sortConfig, columns])
+  }, [data, debouncedGlobalSearch, columnFilters, sortConfig, columns])
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
@@ -157,6 +168,38 @@ export default function DataTable({ data }: DataTableProps) {
     setCurrentPage(1)
   }
 
+  const clearAllFilters = useCallback(() => {
+    setGlobalSearch('')
+    setColumnFilters({})
+    setCurrentPage(1)
+  }, [])
+
+  const getItemColor = (index: number, type: 'venue' | 'url') => {
+    const venueColors = [
+      'text-pink-600',
+      'text-purple-600',
+      'text-blue-600',
+      'text-indigo-600',
+      'text-cyan-600',
+      'text-teal-600',
+    ]
+    
+    const urlColors = [
+      'from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600',
+      'from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600',
+      'from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600',
+      'from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600',
+      'from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600',
+      'from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600',
+    ]
+    
+    if (type === 'venue') {
+      return venueColors[index % venueColors.length]
+    } else {
+      return urlColors[index % urlColors.length]
+    }
+  }
+
   const getSortIcon = (key: keyof Paper) => {
     if (sortConfig.key !== key) {
       return (
@@ -178,49 +221,66 @@ export default function DataTable({ data }: DataTableProps) {
     <div className="space-y-4">
       {/* Global Search */}
       <div className="glass-effect rounded-2xl shadow-xl p-6 border-2 border-purple-200/50">
-        <label className="block text-sm font-bold text-purple-700 mb-3 flex items-center gap-2">
-          <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          Global Search (all fields)
-        </label>
-        <input
-          type="text"
-          value={globalSearch}
-          onChange={(e) => {
-            setGlobalSearch(e.target.value)
-            setCurrentPage(1)
-          }}
-          placeholder="Search across all columns..."
-          className="w-full px-5 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all shadow-inner bg-white/50"
-        />
+        <div className="flex items-center justify-between mb-3">
+          <label className="block text-sm font-bold text-purple-700 flex items-center gap-2">
+            <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Global Search (all fields)
+          </label>
+          {(globalSearch || Object.values(columnFilters).some(f => f.trim())) && (
+            <button
+              onClick={clearAllFilters}
+              className="text-xs px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-colors font-medium"
+              title="Clear all filters"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+        <div className="relative">
+          <input
+            type="text"
+            value={globalSearch}
+            onChange={(e) => {
+              setGlobalSearch(e.target.value)
+            }}
+            placeholder="Search across all columns..."
+            className="w-full px-5 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all shadow-inner bg-white/50 pr-10"
+          />
+          {globalSearch && (
+            <button
+              onClick={() => setGlobalSearch('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label="Clear search"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Items per page selector */}
-      <div className="flex items-center justify-between glass-effect rounded-2xl shadow-xl p-4 border-2 border-purple-200/50">
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-bold text-purple-700">Show:</label>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value))
-              setCurrentPage(1)
-            }}
-            className="px-4 py-2 border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white font-medium text-purple-700 cursor-pointer hover:border-purple-400 transition-all"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <span className="text-sm font-medium text-purple-600">entries</span>
-        </div>
+      {/* Entries info and Export - shown at top */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="text-sm font-medium text-purple-700 bg-purple-50 px-4 py-2 rounded-lg border border-purple-200">
           Showing <span className="font-bold text-pink-600">{paginatedData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to{' '}
           <span className="font-bold text-pink-600">{Math.min(currentPage * itemsPerPage, filteredAndSortedData.length)}</span> of{' '}
           <span className="font-bold text-pink-600">{filteredAndSortedData.length}</span> entries
         </div>
+        {filteredAndSortedData.length > 0 && (
+          <button
+            onClick={() => exportToCSV(filteredAndSortedData, 'research_papers')}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl transition-all text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+            title="Export filtered results to CSV"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Table */}
@@ -279,17 +339,27 @@ export default function DataTable({ data }: DataTableProps) {
                   >
                     <td className="px-6 py-4 whitespace-normal">
                       <div className="text-sm font-bold text-purple-700 max-w-md">
-                        {stripHtmlTags(row.title)}
+                        {(() => {
+                          const title = stripHtmlTags(row.title)
+                          return title.length > 200 ? `${title.substring(0, 200)}...` : title
+                        })()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-normal">
                       <div className="text-sm text-gray-700 max-w-xs font-medium">
-                        {stripHtmlTags(row.author)}
+                        {(() => {
+                          const author = stripHtmlTags(row.author)
+                          return author.length > 200 ? `${author.substring(0, 200)}...` : author
+                        })()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-normal">
-                      <div className="text-sm text-pink-600 max-w-xs font-medium">
-                        {stripHtmlTags(row.venue_name)}
+                      <div className="text-sm max-w-xs font-medium">
+                        {extractListItems(row.venue_name).map((item, idx) => (
+                          <div key={idx} className={`mb-1 last:mb-0 ${getItemColor(idx, 'venue')}`}>
+                            {item}
+                          </div>
+                        ))}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -298,38 +368,140 @@ export default function DataTable({ data }: DataTableProps) {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-normal">
-                      <div className="text-sm">
-                        {extractLinks(row.url).map((link, i) => (
-                          link.url ? (
-                            <a
-                              key={i}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs"
-                            >
-                              🔗 {link.text || 'Link'}
-                            </a>
-                          ) : (
-                            <span key={i} className="text-gray-400">-</span>
-                          )
-                        ))}
+                      <div className="text-sm space-y-1">
+                        {(() => {
+                          const listItems = extractListItems(row.url)
+                          const links = extractLinks(row.url)
+                          
+                          // If we have list items, show each on a separate line
+                          if (listItems.length > 0) {
+                            return listItems.map((item, idx) => {
+                              // Try to find a matching link for this item
+                              const matchingLink = links.find(l => 
+                                l.text === item || 
+                                l.url === item || 
+                                item.includes(l.url) ||
+                                l.text.includes(item)
+                              )
+                              
+                              return matchingLink && matchingLink.url ? (
+                                <div key={idx} className="mb-1 last:mb-0">
+                                  <a
+                                    href={matchingLink.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r ${getItemColor(idx, 'url')} text-white rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs`}
+                                  >
+                                    🔗 {matchingLink.text || 'Link'}
+                                  </a>
+                                </div>
+                              ) : (
+                                <div key={idx} className="mb-1 last:mb-0 text-gray-600">
+                                  {item}
+                                </div>
+                              )
+                            })
+                          }
+                          
+                          // If no list items, show links normally
+                          if (links.length > 0) {
+                            return links.map((link, i) => (
+                              link.url ? (
+                                <div key={i} className="mb-1 last:mb-0">
+                                  <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r ${getItemColor(i, 'url')} text-white rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs`}
+                                  >
+                                    🔗 {link.text || 'Link'}
+                                  </a>
+                                </div>
+                              ) : null
+                            ))
+                          }
+                          
+                          return <span className="text-gray-400">-</span>
+                        })()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-normal">
-                      <div className="text-sm">
-                        {row.code && stripHtmlTags(row.code) ? (
-                          <a
-                            href={stripHtmlTags(row.code)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs"
-                          >
-                            💻 Code
-                          </a>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
+                      <div className="text-sm space-y-1">
+                        {(() => {
+                          if (!row.code) return <span className="text-gray-400">-</span>
+                          
+                          // Extract links from HTML (similar to URL column)
+                          const links = extractLinks(row.code)
+                          const listItems = extractListItems(row.code)
+                          
+                          // If we have list items, show each on a separate line
+                          if (listItems.length > 0) {
+                            return listItems.map((item, idx) => {
+                              // Try to find a matching link for this item
+                              const matchingLink = links.find(l => 
+                                l.text === item || 
+                                l.url === item || 
+                                item.includes(l.url) ||
+                                l.text.includes(item)
+                              )
+                              
+                              return matchingLink && matchingLink.url ? (
+                                <div key={idx} className="mb-1 last:mb-0">
+                                  <a
+                                    href={matchingLink.url.endsWith('.') ? matchingLink.url.slice(0, -1) : matchingLink.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs"
+                                  >
+                                    💻 {matchingLink.text || 'Code'}
+                                  </a>
+                                </div>
+                              ) : (
+                                <div key={idx} className="mb-1 last:mb-0 text-gray-600">
+                                  {item}
+                                </div>
+                              )
+                            })
+                          }
+                          
+                          // If we have links, show them
+                          if (links.length > 0 && links[0].url) {
+                            return links.map((link, i) => {
+                              const cleanUrl = link.url.endsWith('.') ? link.url.slice(0, -1) : link.url
+                              return (
+                                <div key={i} className="mb-1 last:mb-0">
+                                  <a
+                                    href={cleanUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs"
+                                  >
+                                    💻 {link.text || 'Code'}
+                                  </a>
+                                </div>
+                              )
+                            })
+                          }
+                          
+                          // If it's a plain URL (starts with http/https), use it directly
+                          const plainText = stripHtmlTags(row.code).trim()
+                          if (plainText && (plainText.startsWith('http://') || plainText.startsWith('https://'))) {
+                            const cleanUrl = plainText.endsWith('.') ? plainText.slice(0, -1) : plainText
+                            return (
+                              <a
+                                href={cleanUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-md hover:shadow-lg font-medium text-xs"
+                              >
+                                💻 Code
+                              </a>
+                            )
+                          }
+                          
+                          // If no valid link found, show dash
+                          return <span className="text-gray-400">-</span>
+                        })()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -394,6 +566,27 @@ export default function DataTable({ data }: DataTableProps) {
           </div>
         </div>
       )}
+
+      {/* Items per page selector - at bottom */}
+      <div className="flex items-center justify-between glass-effect rounded-2xl shadow-xl p-4 border-2 border-purple-200/50">
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-bold text-purple-700">Show:</label>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value))
+              setCurrentPage(1)
+            }}
+            className="px-4 py-2 border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white font-medium text-purple-700 cursor-pointer hover:border-purple-400 transition-all"
+          >
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={200}>200</option>
+          </select>
+          <span className="text-sm font-medium text-purple-600">entries per page</span>
+        </div>
+      </div>
     </div>
   )
 }

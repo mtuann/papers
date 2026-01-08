@@ -1,21 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Sidebar from '@/components/Sidebar'
+import TopNav from '@/components/TopNav'
 import DataTable from '@/components/DataTable'
-import { loadPapersData, Paper, getAvailableTopics } from '@/lib/utils'
+import { loadPapersData, Paper, getAvailableTopics, formatTopicName } from '@/lib/utils'
 
 export default function Home() {
   const [selectedTopic, setSelectedTopic] = useState('backdoor_attack')
   const [papers, setPapers] = useState<Paper[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [topics, setTopics] = useState<string[]>([])
 
   useEffect(() => {
+    const availableTopics = getAvailableTopics()
+    setTopics(availableTopics)
     // Set default topic from available topics
-    const topics = getAvailableTopics()
-    if (topics.length > 0 && !topics.includes(selectedTopic)) {
-      setSelectedTopic(topics[0])
+    if (availableTopics.length > 0 && !availableTopics.includes(selectedTopic)) {
+      setSelectedTopic(availableTopics[0])
     }
   }, [selectedTopic])
 
@@ -40,19 +42,36 @@ export default function Home() {
   }, [selectedTopic])
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      <Sidebar selectedTopic={selectedTopic} onTopicChange={setSelectedTopic} />
-      
-      <main className="flex-1 lg:ml-0 pt-16 lg:pt-8 p-4 lg:p-8 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col">
+      <TopNav selectedTopic={selectedTopic} onTopicChange={setSelectedTopic} />
+
+      <main className="flex-1 pt-20 lg:pt-24 p-4 lg:p-8 overflow-x-hidden w-full">
+        <div className="w-full">
           <div className="mb-6 glass-effect rounded-2xl p-6 shadow-xl border-2 border-purple-200/50">
-            <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
-              Research Papers
-            </h1>
+            <p className="text-gray-600 text-sm mb-4 italic">
+              The data is sourced from IEEE Xplore, ACM, ScienceDirect, Springer, OpenReview, arXiv, DBLP, OpenAlex, and Google Scholar.
+            </p>
+
+            {/* Topic Selection */}
+            <div className="flex items-center gap-3 mb-4">
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
+              <select
+                value={selectedTopic}
+                onChange={(e) => setSelectedTopic(e.target.value)}
+                className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
+              >
+                {topics.map((topic) => (
+                  <option key={topic} value={topic}>
+                    {formatTopicName(topic)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <p className="text-gray-700 text-lg">
               Browse and search through research papers on{' '}
               <span className="font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                {selectedTopic.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                {formatTopicName(selectedTopic)}
               </span>
             </p>
             {!loading && !error && papers.length > 0 && (
@@ -101,6 +120,20 @@ export default function Home() {
           {!loading && !error && papers.length > 0 && <DataTable data={papers} />}
         </div>
       </main>
+
+      {/* Footer with ClustrMaps */}
+      <footer className="mt-12 py-8 px-4 lg:px-8 border-t border-purple-200/30">
+        <div className="max-w-full mx-auto">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <p className="text-gray-600 text-sm text-center">
+              © {new Date().getFullYear()} MTUANN. All rights reserved.
+            </p>
+            <div className="flex justify-center w-full" id="clustrmaps-container">
+              {/* ClustrMaps will inject the map here */}
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,7 +15,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <Script
+          id="clustrmaps"
+          strategy="lazyOnload"
+          src="https://clustrmaps.com/map_v2.js?d=7-Udvej828PGj6gVsaVm-bV7Pu4M0wfCk72xPaD7RNM&cl=ffffff&w=a"
+        />
+      </body>
     </html>
   )
 }
