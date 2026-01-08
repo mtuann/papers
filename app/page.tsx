@@ -36,11 +36,11 @@ export default function Home() {
         })
       }
     }
-    
+
     // Check periodically after script loads
     const interval = setInterval(checkAndMoveMap, 500)
     setTimeout(() => clearInterval(interval), 10000) // Stop after 10 seconds
-    
+
     return () => clearInterval(interval)
   }, [])
 
@@ -78,21 +78,6 @@ export default function Home() {
                   The data is sourced from IEEE Xplore, ACM, ScienceDirect, Springer, OpenReview, arXiv, DBLP, OpenAlex, and Google Scholar.
                 </p>
 
-                {/* Topic Selection */}
-                <div className="flex items-center gap-3 mb-4">
-                  <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Select Topic:</label>
-                  <select
-                    value={selectedTopic}
-                    onChange={(e) => setSelectedTopic(e.target.value)}
-                    className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm min-w-[220px] font-medium"
-                  >
-                    {topics.map((topic) => (
-                      <option key={topic} value={topic}>
-                        {formatTopicName(topic)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
                 <p className="text-gray-700 text-lg">
                   Browse and search through research papers on{' '}
@@ -107,10 +92,41 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Right side: ClustrMaps */}
-              <div className="flex-shrink-0 lg:ml-auto">
-                <div id="clustrmaps-container" className="flex justify-center">
-                  {/* ClustrMaps will inject the map here */}
+              {/* Right side: Topic Selection & ClustrMaps */}
+              <div className="flex-shrink-0 w-full lg:w-[300px] lg:ml-auto">
+                <div className="p-5 bg-white/40 dark:bg-black/20 rounded-2xl border border-purple-200/50 shadow-lg backdrop-blur-md flex flex-col gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700 dark:text-gray-200 px-1">
+                      Select Topic
+                    </label>
+                    <div className="relative group">
+                      <select
+                        value={selectedTopic}
+                        onChange={(e) => setSelectedTopic(e.target.value)}
+                        className="w-full appearance-none px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-purple-500/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 hover:border-purple-400 transition-all cursor-pointer shadow-lg text-sm font-medium pr-10"
+                      >
+                        {topics.map((topic) => (
+                          <option key={topic} value={topic}>
+                            {formatTopicName(topic)}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/80">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-1">
+                      Visitor Map
+                    </label>
+                    <div id="clustrmaps-container" className="flex justify-center overflow-hidden rounded-xl bg-white/50 p-2 shadow-inner min-h-[100px] items-center">
+                      {/* ClustrMaps will inject the map here */}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
