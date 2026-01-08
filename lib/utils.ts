@@ -39,12 +39,33 @@ export async function loadPapersData(topic: string): Promise<Paper[]> {
   try {
     // Use relative path for static export - Next.js handles basePath automatically
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-    const response = await fetch(`${basePath}/data/paper_${topic}.csv`)
-    if (!response.ok) {
-      throw new Error(`Failed to load data for topic: ${topic}`)
+    
+    // Try both naming patterns: papers_<topic> and paper_<topic>
+    const possiblePaths = [
+      `${basePath}/data/papers_${topic}.csv`,
+      `${basePath}/data/paper_${topic}.csv`,
+    ]
+    
+    let csvText = ''
+    let found = false
+    
+    for (const path of possiblePaths) {
+      try {
+        const response = await fetch(path)
+        if (response.ok) {
+          csvText = await response.text()
+          found = true
+          break
+        }
+      } catch (e) {
+        // Try next path
+        continue
+      }
     }
     
-    const csvText = await response.text()
+    if (!found) {
+      throw new Error(`Failed to load data for topic: ${topic}`)
+    }
     
     return new Promise((resolve, reject) => {
       Papa.parse(csvText, {
@@ -65,9 +86,18 @@ export async function loadPapersData(topic: string): Promise<Paper[]> {
 }
 
 export function getAvailableTopics(): string[] {
-  // This would ideally be dynamic, but for now we'll return known topics
-  // You can modify this to scan the data directory
-  return ['backdoor_attack']
+  // List of all available topics extracted from CSV filenames
+  // Topics are extracted by removing 'paper_' or 'papers_' prefix and '.csv' suffix
+  return [
+    'advex',
+    'backdoor_attack',
+    'federated',
+    'fl_awe',
+    'llm',
+    'multi_modal',
+    'serverless',
+    'unlearning',
+  ]
 }
 
 export function formatTopicName(topic: string): string {
