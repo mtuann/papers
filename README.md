@@ -2,6 +2,8 @@
 
 A modern, responsive web application for browsing and searching research papers by topic. Built with Next.js and deployed via GitHub Actions to GitHub Pages.
 
+![Star History Chart](https://api.star-history.com/svg?repos=mtuann/papers&type=Date)
+
 ## Features
 
 - 🔍 **Global Search**: Case-insensitive search across all fields with debounced input for better performance
