@@ -4,9 +4,9 @@
   "title": "LLM Serving",
   "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
   "csv": "papers_llm_serving.csv",
-  "count": 5131,
-  "with_code": 203,
-  "new_30d": 5131,
+  "count": 5202,
+  "with_code": 204,
+  "new_30d": 5202,
   "repo": "mtuann/llm-serving-papers",
   "updated": "2026-10-19"
  },
