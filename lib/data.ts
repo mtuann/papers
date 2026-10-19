@@ -30,8 +30,9 @@ export async function loadPapers(key: string): Promise<Paper[]> {
 }
 
 export function repoName(url: string) {
-  const m = url.match(/github\.com\/([^/]+\/[^/#?]+)/)
-  return m ? m[1].replace(/\.git$/, '') : ''
+  const m = url.match(/github\.com\/([A-Za-z0-9-]+\/[A-Za-z0-9_.-]+)/)
+  // drop sentence punctuation and .git picked up with the link ("…/repo." or "…/repo.git")
+  return m ? m[1].replace(/[.,;:]+$/, '').replace(/(\.git)+$/, '') : ''
 }
 
 // one quiet colour per topic (used for the dot / stat accents)

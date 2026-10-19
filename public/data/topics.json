@@ -8,7 +8,7 @@
   "with_code": 941,
   "new_30d": 8832,
   "repo": "mtuann/federated-learning-updated-papers",
-  "updated": "2026-10-18"
+  "updated": "2026-10-19"
  },
  {
   "key": "backdoor_attack",
@@ -19,7 +19,7 @@
   "with_code": 382,
   "new_30d": 1258,
   "repo": "mtuann/backdoor-ai-resources",
-  "updated": "2026-10-18"
+  "updated": "2026-10-19"
  },
  {
   "key": "unlearning",
@@ -27,10 +27,10 @@
   "about": "Removing the influence of specific data from trained models: exact and approximate unlearning, evaluation and LLM unlearning.",
   "csv": "papers_unlearning.csv",
   "count": 5016,
-  "with_code": 291,
+  "with_code": 290,
   "new_30d": 1662,
   "repo": "mtuann/machine-unlearning-papers",
-  "updated": "2026-10-18"
+  "updated": "2026-10-19"
  },
  {
   "key": "llm_serving",
@@ -41,6 +41,6 @@
   "with_code": 203,
   "new_30d": 5131,
   "repo": "mtuann/llm-serving-papers",
-  "updated": "2026-10-18"
+  "updated": "2026-10-19"
  }
 ]
