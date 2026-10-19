@@ -11,6 +11,17 @@
   "updated": "2026-10-19"
  },
  {
+  "key": "rag",
+  "title": "RAG",
+  "about": "Retrieval-augmented generation: retrievers and indexes for LLMs, RAG pipelines, GraphRAG, agentic and multimodal RAG, evaluation, robustness and security.",
+  "csv": "papers_rag.csv",
+  "count": 22017,
+  "with_code": 1083,
+  "new_30d": 22017,
+  "repo": "mtuann/rag-papers",
+  "updated": "2026-10-19"
+ },
+ {
   "key": "backdoor_attack",
   "title": "Backdoor Learning",
   "about": "Backdoor (trojan) attacks on machine-learning models and defenses against them, including federated and LLM settings.",

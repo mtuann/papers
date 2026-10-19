@@ -37,6 +37,6 @@ export function repoName(url: string) {
 
 // one quiet colour per topic (used for the dot / stat accents)
 export const TOPIC_COLOR: Record<string, string> = {
-  llm_serving: '#7C3AED', federated: '#0F9F8F', backdoor_attack: '#E11D48', unlearning: '#D97706',
+  llm_serving: '#7C3AED', rag: '#2563EB', federated: '#0F9F8F', backdoor_attack: '#E11D48', unlearning: '#D97706',
 }
 export const topicColor = (k: string) => TOPIC_COLOR[k] || '#4F46E5'
