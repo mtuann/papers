@@ -26,9 +26,9 @@
   "title": "Machine Unlearning",
   "about": "Removing the influence of specific data from trained models: exact and approximate unlearning, evaluation and LLM unlearning.",
   "csv": "papers_unlearning.csv",
-  "count": 5016,
-  "with_code": 290,
-  "new_30d": 1662,
+  "count": 3775,
+  "with_code": 286,
+  "new_30d": 1498,
   "repo": "mtuann/machine-unlearning-papers",
   "updated": "2026-10-19"
  },
