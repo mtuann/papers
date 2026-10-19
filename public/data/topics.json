@@ -26,9 +26,9 @@
   "title": "Agent CDN",
   "about": "Content-delivery and network infrastructure for LLMs and AI agents: KV-cache and knowledge delivery networks, edge, in-network and semantic caching, web caches for agent and crawler traffic, and the agentic web.",
   "csv": "papers_agent_cdn.csv",
-  "count": 240,
-  "with_code": 17,
-  "new_30d": 240,
+  "count": 208,
+  "with_code": 16,
+  "new_30d": 208,
   "repo": "mtuann/agent-cdn-papers",
   "updated": "2026-10-19"
  },
