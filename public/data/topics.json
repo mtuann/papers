@@ -1,13 +1,13 @@
 [
  {
-  "key": "federated",
-  "title": "Federated Learning",
-  "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
-  "csv": "papers_federated.csv",
-  "count": 38263,
-  "with_code": 941,
-  "new_30d": 8809,
-  "repo": "mtuann/federated-learning-updated-papers",
+  "key": "llm_serving",
+  "title": "LLM Serving",
+  "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
+  "csv": "papers_llm_serving.csv",
+  "count": 5131,
+  "with_code": 203,
+  "new_30d": 5131,
+  "repo": "mtuann/llm-serving-papers",
   "updated": "2026-10-19"
  },
  {
@@ -33,14 +33,14 @@
   "updated": "2026-10-19"
  },
  {
-  "key": "llm_serving",
-  "title": "LLM Serving",
-  "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
-  "csv": "papers_llm_serving.csv",
-  "count": 5131,
-  "with_code": 203,
-  "new_30d": 5131,
-  "repo": "mtuann/llm-serving-papers",
+  "key": "federated",
+  "title": "Federated Learning",
+  "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
+  "csv": "papers_federated.csv",
+  "count": 38263,
+  "with_code": 941,
+  "new_30d": 8809,
+  "repo": "mtuann/federated-learning-updated-papers",
   "updated": "2026-10-19"
  }
 ]
