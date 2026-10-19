@@ -1,0 +1,46 @@
+[
+ {
+  "key": "federated",
+  "title": "Federated Learning",
+  "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
+  "csv": "papers_federated.csv",
+  "count": 38294,
+  "with_code": 941,
+  "new_30d": 8832,
+  "repo": "mtuann/federated-learning-updated-papers",
+  "updated": "2026-10-18"
+ },
+ {
+  "key": "backdoor_attack",
+  "title": "Backdoor Learning",
+  "about": "Backdoor (trojan) attacks on machine-learning models and defenses against them, including federated and LLM settings.",
+  "csv": "papers_backdoor_attack.csv",
+  "count": 5044,
+  "with_code": 382,
+  "new_30d": 1258,
+  "repo": "mtuann/backdoor-ai-resources",
+  "updated": "2026-10-18"
+ },
+ {
+  "key": "unlearning",
+  "title": "Machine Unlearning",
+  "about": "Removing the influence of specific data from trained models: exact and approximate unlearning, evaluation and LLM unlearning.",
+  "csv": "papers_unlearning.csv",
+  "count": 5016,
+  "with_code": 291,
+  "new_30d": 1662,
+  "repo": "mtuann/machine-unlearning-papers",
+  "updated": "2026-10-18"
+ },
+ {
+  "key": "llm_serving",
+  "title": "LLM Serving",
+  "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
+  "csv": "papers_llm_serving.csv",
+  "count": 5131,
+  "with_code": 203,
+  "new_30d": 5131,
+  "repo": "mtuann/llm-serving-papers",
+  "updated": "2026-10-18"
+ }
+]
