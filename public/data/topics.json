@@ -8,29 +8,29 @@
   "with_code": 415,
   "new_30d": 6113,
   "repo": "mtuann/llm-serving-papers",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  },
  {
   "key": "rag",
   "title": "RAG",
   "about": "Retrieval-augmented generation: retrievers and indexes for LLMs, RAG pipelines, GraphRAG, agentic and multimodal RAG, evaluation, robustness and security.",
   "csv": "papers_rag.csv",
-  "count": 22017,
-  "with_code": 1083,
-  "new_30d": 22017,
+  "count": 21821,
+  "with_code": 1049,
+  "new_30d": 21821,
   "repo": "mtuann/rag-papers",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  },
  {
   "key": "agent_cdn",
   "title": "Agent CDN",
   "about": "Content-delivery and network infrastructure for LLMs and AI agents: KV-cache and knowledge delivery networks, edge, in-network and semantic caching, web caches for agent and crawler traffic, and the agentic web.",
   "csv": "papers_agent_cdn.csv",
-  "count": 208,
-  "with_code": 16,
-  "new_30d": 208,
+  "count": 402,
+  "with_code": 14,
+  "new_30d": 402,
   "repo": "mtuann/agent-cdn-papers",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  },
  {
   "key": "backdoor_attack",
@@ -41,7 +41,7 @@
   "with_code": 399,
   "new_30d": 1225,
   "repo": "mtuann/backdoor-ai-resources",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  },
  {
   "key": "unlearning",
@@ -52,7 +52,7 @@
   "with_code": 312,
   "new_30d": 1515,
   "repo": "mtuann/machine-unlearning-papers",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  },
  {
   "key": "federated",
@@ -63,6 +63,6 @@
   "with_code": 955,
   "new_30d": 9030,
   "repo": "mtuann/federated-learning-updated-papers",
-  "updated": "2026-10-19"
+  "updated": "2026-10-20"
  }
 ]
