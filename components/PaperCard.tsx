@@ -23,6 +23,11 @@ export default function PaperCard({ p, q, isNew }: { p: Paper; q: string; isNew:
         {url ? <a href={url} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline dark:hover:text-accent-dark">{highlight(p.title, q)}</a> : highlight(p.title, q)}
       </h3>
       {p.authors && <Clamp text={p.authors} lines={2} className="mt-1 text-sm muted">{highlight(p.authors, q)}</Clamp>}
+      {p.also.length > 0 && (
+        <p className="mt-1 text-xs muted">
+          Also{' '}{p.also.map(([v, u], k) => <span key={u}>{k > 0 && ' · '}<a href={u} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline dark:hover:text-accent-dark">{v}</a></span>)}
+        </p>
+      )}
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {p.links.map(([src, u]) => (
           <a key={src} href={u} target="_blank" rel="noreferrer" className="chip">{src}</a>

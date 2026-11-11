@@ -42,7 +42,14 @@ export default function PaperTable({ rows, sort, onSort, filters, newSince }: {
                   </Clamp>
                 </td>
                 <td className="px-3 py-2.5 muted"><Clamp text={p.authors} lines={2} className="text-[13px] leading-snug" /></td>
-                <td className="px-3 py-2.5"><Clamp text={p.venue} lines={4} className="text-xs font-medium leading-snug text-accent dark:text-accent-dark" /></td>
+                <td className="px-3 py-2.5">
+                  <Clamp text={p.venue} lines={4} className="text-xs font-medium leading-snug text-accent dark:text-accent-dark" />
+                  {p.also.length > 0 && (
+                    <div className="mt-1 text-[11px] leading-snug muted" title="Other versions of this paper">
+                      also{' '}{p.also.map(([v, u], k) => <span key={u}>{k > 0 && ' · '}<a href={u} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline dark:hover:text-accent-dark">{v}</a></span>)}
+                    </div>
+                  )}
+                </td>
                 <td className="px-3 py-2.5">
                   <div className="flex flex-wrap gap-1">
                     {p.links.map(([s, u]) => <a key={s} href={u} target="_blank" rel="noreferrer" className="chip !px-1.5 !text-[11px]">{s}</a>)}

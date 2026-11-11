@@ -5,6 +5,7 @@ export interface Topic {
 export interface Paper {
   title: string; authors: string; date: string; venue: string
   links: [string, string][]; code: string; seen: string; year: string
+  also: [string, string][]   // other versions of the same work: [venue, url]
 }
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -18,14 +19,14 @@ export async function loadTopics(): Promise<Topic[]> {
   return r.ok ? r.json() : []
 }
 
-type Row = [string, string[] | string, string, string, Record<string, string>, string, string]
+type Row = [string, string[] | string, string, string, Record<string, string>, string, string, [string, string][]?]
 
 export async function loadPapers(key: string): Promise<Paper[]> {
   const r = await fetch(dataUrl(`${key}.json`), FRESH)
   if (!r.ok) return []
   const { papers } = (await r.json()) as { papers: Row[] }
-  return papers.map(([title, authors, date, venue, links, code, seen]) => ({
-    title, date, venue, code, seen,
+  return papers.map(([title, authors, date, venue, links, code, seen, also]) => ({
+    title, date, venue, code, seen, also: also || [],
     authors: Array.isArray(authors) ? authors.join(', ') : authors,
     links: Object.entries(links),
     year: date.slice(0, 4),
