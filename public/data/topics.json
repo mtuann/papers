@@ -34,7 +34,7 @@
   "title": "Backdoor Learning",
   "about": "Backdoor (trojan) attacks on machine-learning models and defenses against them, including federated and LLM settings.",
   "count": 4559,
-  "with_code": 406,
+  "with_code": 449,
   "new_30d": 1216,
   "repo": "mtuann/backdoor-ai-resources",
   "updated": "2026-11-11"
@@ -44,7 +44,7 @@
   "title": "Machine Unlearning",
   "about": "Removing the influence of specific data from trained models: exact and approximate unlearning, evaluation and LLM unlearning.",
   "count": 3790,
-  "with_code": 322,
+  "with_code": 359,
   "new_30d": 1538,
   "repo": "mtuann/machine-unlearning-papers",
   "updated": "2026-11-11"
@@ -54,7 +54,7 @@
   "title": "Federated Learning",
   "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
   "count": 38108,
-  "with_code": 967,
+  "with_code": 1090,
   "new_30d": 9035,
   "repo": "mtuann/federated-learning-updated-papers",
   "updated": "2026-11-11"
