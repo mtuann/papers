@@ -16,7 +16,7 @@ export default function PaperCard({ p, q, isNew }: { p: Paper; q: string; isNew:
     <article className="card min-w-0 overflow-hidden p-4 transition hover:border-accent/40 sm:p-5">
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
         <time className="font-medium tabular-nums muted">{p.date}</time>
-        {p.venue && <Clamp as="span" text={p.venue} lines={1} className="max-w-[70%] rounded-md bg-accent-soft px-2 py-0.5 font-medium text-accent dark:bg-accent-softdark dark:text-accent-dark" />}
+        {p.venue && <Clamp as="span" text={p.venue} lines={3} className="max-w-full rounded-md bg-accent-soft px-2 py-0.5 font-medium text-accent dark:bg-accent-softdark dark:text-accent-dark" />}
         {isNew && <span className="rounded-md bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">New</span>}
       </div>
       <h3 className="text-[15px] font-semibold leading-snug sm:text-base">

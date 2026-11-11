@@ -1,7 +1,7 @@
 import { ReactNode, useLayoutEffect, useRef, useState } from 'react'
 
 // Static class names so Tailwind keeps them.
-const CLAMP = { 1: 'line-clamp-1', 2: 'line-clamp-2', 3: 'line-clamp-3' } as const
+const CLAMP = { 1: 'line-clamp-1', 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } as const
 
 /**
  * Text cut to a few lines with an ellipsis. The full text is always available:
@@ -9,7 +9,7 @@ const CLAMP = { 1: 'line-clamp-1', 2: 'line-clamp-2', 3: 'line-clamp-3' } as con
  * expands the cell in place; click again to collapse. Clicks on links inside still navigate.
  */
 export default function Clamp({ text, lines = 2, className = '', as = 'div', children }: {
-  text: string; lines?: 1 | 2 | 3; className?: string; as?: 'div' | 'span'; children?: ReactNode
+  text: string; lines?: 1 | 2 | 3 | 4; className?: string; as?: 'div' | 'span'; children?: ReactNode
 }) {
   const ref = useRef<HTMLElement>(null)
   const [open, setOpen] = useState(false)

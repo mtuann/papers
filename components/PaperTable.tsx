@@ -20,7 +20,7 @@ export default function PaperTable({ rows, sort, onSort, filters, newSince }: {
   return (
     <div className="card overflow-x-auto">
       <table className="w-full min-w-[860px] table-fixed border-collapse text-sm">
-        <colgroup><col className="w-[150px]" /><col /><col className="w-[180px]" /><col className="w-[170px]" /><col className="w-[120px]" /><col className="w-[150px]" /></colgroup>
+        <colgroup><col className="w-[150px]" /><col /><col className="w-[180px]" /><col className="w-[190px]" /><col className="w-[120px]" /><col className="w-[150px]" /></colgroup>
         <thead className="bg-surface dark:bg-surface-dark">
           <tr>{head('date', 'Date')}{head('title', 'Title')}{head(null, 'Authors')}{head('venue', 'Venue')}{head(null, 'Source')}{head(null, 'Code')}</tr>
           <tr className="border-b border-line dark:border-line-dark">
@@ -42,7 +42,7 @@ export default function PaperTable({ rows, sort, onSort, filters, newSince }: {
                   </Clamp>
                 </td>
                 <td className="px-3 py-2.5 muted"><Clamp text={p.authors} lines={2} className="text-[13px] leading-snug" /></td>
-                <td className="px-3 py-2.5"><Clamp text={p.venue} lines={2} className="text-xs font-medium text-accent dark:text-accent-dark" /></td>
+                <td className="px-3 py-2.5"><Clamp text={p.venue} lines={4} className="text-xs font-medium leading-snug text-accent dark:text-accent-dark" /></td>
                 <td className="px-3 py-2.5">
                   <div className="flex flex-wrap gap-1">
                     {p.links.map(([s, u]) => <a key={s} href={u} target="_blank" rel="noreferrer" className="chip !px-1.5 !text-[11px]">{s}</a>)}
