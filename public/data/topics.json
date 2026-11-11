@@ -3,9 +3,9 @@
   "key": "llm_serving",
   "title": "LLM Serving",
   "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
-  "count": 6629,
+  "count": 6626,
   "with_code": 723,
-  "new_30d": 6629,
+  "new_30d": 6626,
   "repo": "mtuann/llm-serving-papers",
   "updated": "2026-11-11"
  },
@@ -13,9 +13,9 @@
   "key": "rag",
   "title": "RAG",
   "about": "Retrieval-augmented generation: retrievers and indexes for LLMs, RAG pipelines, GraphRAG, agentic and multimodal RAG, evaluation, robustness and security.",
-  "count": 22627,
+  "count": 22622,
   "with_code": 1359,
-  "new_30d": 22627,
+  "new_30d": 22622,
   "repo": "mtuann/rag-papers",
   "updated": "2026-11-11"
  },
@@ -33,9 +33,9 @@
   "key": "backdoor_attack",
   "title": "Backdoor Learning",
   "about": "Backdoor (trojan) attacks on machine-learning models and defenses against them, including federated and LLM settings.",
-  "count": 4504,
+  "count": 4505,
   "with_code": 439,
-  "new_30d": 1211,
+  "new_30d": 1212,
   "repo": "mtuann/backdoor-ai-resources",
   "updated": "2026-11-11"
  },
@@ -53,9 +53,9 @@
   "key": "federated",
   "title": "Federated Learning",
   "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
-  "count": 38099,
+  "count": 38101,
   "with_code": 1090,
-  "new_30d": 9032,
+  "new_30d": 9034,
   "repo": "mtuann/federated-learning-updated-papers",
   "updated": "2026-11-11"
  }
