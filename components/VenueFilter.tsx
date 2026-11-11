@@ -1,9 +1,11 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { FAMILY, venueLabel } from '@/lib/data'
 
-/** Multi-select with search and per-venue counts (counts respect the other active filters). */
-export default function VenueFilter({ counts, selected, onChange }: {
-  counts: [string, number][]; selected: string[]; onChange: (v: string[]) => void
+/** Multi-select with search and per-venue counts (counts respect the other active filters).
+ *  Conferences seen in several years are offered first as "<name> · all years" (value "@<name>"). */
+export default function VenueFilter({ counts, families, selected, onChange }: {
+  counts: [string, number][]; families: [string, number, number][]; selected: string[]; onChange: (v: string[]) => void
 }) {
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
@@ -17,8 +19,12 @@ export default function VenueFilter({ counts, selected, onChange }: {
     const ql = q.toLowerCase()
     return counts.filter(([v]) => !ql || v.toLowerCase().includes(ql)).slice(0, 200)
   }, [counts, q])
+  const fams = useMemo(() => {
+    const ql = q.toLowerCase()
+    return families.filter(([v]) => !ql || v.toLowerCase().includes(ql)).slice(0, ql ? 50 : 12)
+  }, [families, q])
   const toggle = (v: string) => onChange(selected.includes(v) ? selected.filter(x => x !== v) : [...selected, v])
-  const label = selected.length === 0 ? 'All venues' : selected.length === 1 ? selected[0] : `${selected.length} venues`
+  const label = selected.length === 0 ? 'All venues' : selected.length === 1 ? venueLabel(selected[0]) : `${selected.length} venues`
 
   return (
     <div className="relative" ref={ref}>
@@ -27,9 +33,18 @@ export default function VenueFilter({ counts, selected, onChange }: {
         <span className="truncate">{label}</span><span aria-hidden>▾</span>
       </button>
       {open && (
-        <div className="card absolute left-0 z-30 mt-1 w-72 p-2">
+        <div className="card absolute left-0 z-30 mt-1 w-72 p-2 text-left">
           <input autoFocus value={q} onChange={e => setQ(e.target.value)} placeholder="Find a venue…" className="input mb-2 h-8 w-full text-xs" />
           <div className="max-h-72 overflow-y-auto">
+            {fams.length > 0 && <p className="px-2 pb-1 pt-0.5 text-[10px] font-semibold uppercase tracking-wide muted">All years</p>}
+            {fams.map(([v, n, k]) => (
+              <label key={FAMILY + v} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-canvas dark:hover:bg-canvas-dark">
+                <input type="checkbox" checked={selected.includes(FAMILY + v)} onChange={() => toggle(FAMILY + v)} className="accent-[#4F46E5]" />
+                <span className="flex-1 truncate font-medium" title={`${v}: every year and submission (${k} venues)`}>{v} <span className="font-normal muted">· all years</span></span>
+                <span className="tabular-nums muted">{n.toLocaleString()}</span>
+              </label>
+            ))}
+            {fams.length > 0 && <p className="border-t border-line px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wide muted dark:border-line-dark">Single venues</p>}
             {list.map(([v, n]) => (
               <label key={v} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-canvas dark:hover:bg-canvas-dark">
                 <input type="checkbox" checked={selected.includes(v)} onChange={() => toggle(v)} className="accent-[#4F46E5]" />

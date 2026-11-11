@@ -5,7 +5,7 @@ import PaperCard from '@/components/PaperCard'
 import PaperTable, { SortKey, SortState } from '@/components/PaperTable'
 import VenueFilter from '@/components/VenueFilter'
 import { Download, Search } from '@/components/icons'
-import { Kind, loadPapers, loadTopics, Paper, Topic, topicColor } from '@/lib/data'
+import { FAMILY, Kind, loadPapers, loadTopics, Paper, Topic, topicColor, venueFamily, venueLabel } from '@/lib/data'
 
 type View = 'table' | 'cards'
 interface Filters {
@@ -26,7 +26,7 @@ function match(p: Paper, f: Filters, skipVenue = false) {
   return (!f.q || has(p.title, f.q) || has(p.authors, f.q) || has(p.venue, f.q)) &&
     (!f.title || has(p.title, f.title)) &&
     (!f.author || has(p.authors, f.author)) &&
-    (skipVenue || !f.venues.length || f.venues.includes(p.venue)) &&
+    (skipVenue || !f.venues.length || f.venues.includes(p.venue) || f.venues.includes(FAMILY + venueFamily(p.venue))) &&
     (!f.y1 || p.year >= f.y1) && (!f.y2 || p.year <= f.y2) &&
     (!f.source || p.links.some(l => l[0] === f.source)) &&
     (!f.code || p.code.includes('github.com')) &&
@@ -103,6 +103,18 @@ export default function Home() {
     for (const p of papers) if (p.venue && match(p, f, true)) c.set(p.venue, (c.get(p.venue) || 0) + 1)
     return Array.from(c.entries()).sort((a, b) => b[1] - a[1])
   }, [papers, f])
+  // families with papers from 2+ years / statuses: [family, total, number of venues]
+  const venueFamilies = useMemo(() => {
+    const c = new Map<string, [number, number]>()
+    for (const [v, n] of venueCounts) {
+      const fam = venueFamily(v)
+      if (fam === v) continue
+      const [t, k] = c.get(fam) || [0, 0]
+      c.set(fam, [t + n, k + 1])
+    }
+    return Array.from(c.entries()).filter(([, [, k]]) => k > 1).map(([fam, [t, k]]) => [fam, t, k] as [string, number, number])
+      .sort((a, b) => b[1] - a[1])
+  }, [venueCounts])
   const filtered = useMemo(() => {
     const out = papers.filter(p => match(p, f))
     const cmp: Record<SortKey, (a: Paper, b: Paper) => number> = {
@@ -132,7 +144,7 @@ export default function Home() {
   if (raw.q) chips.push([`“${raw.q}”`, () => set({ q: '' })])
   if (raw.title) chips.push([`title: ${raw.title}`, () => set({ title: '' })])
   if (raw.author) chips.push([`author: ${raw.author}`, () => set({ author: '' })])
-  raw.venues.forEach(v => chips.push([v, () => set({ venues: raw.venues.filter(x => x !== v) })]))
+  raw.venues.forEach(v => chips.push([venueLabel(v), () => set({ venues: raw.venues.filter(x => x !== v) })]))
   if (raw.y1 || raw.y2) chips.push([`${raw.y1 || '…'}–${raw.y2 || '…'}`, () => set({ y1: '', y2: '' })])
   if (raw.source) chips.push([`source: ${raw.source}`, () => set({ source: '' })])
   if (raw.code) chips.push(['with code', () => set({ code: false })])
@@ -149,7 +161,7 @@ export default function Home() {
     <input key="t" value={raw.title} onChange={e => set({ title: e.target.value })} placeholder="Filter title…" className={small} />,
     <input key="a" value={raw.author} onChange={e => set({ author: e.target.value })} placeholder="Filter author…" className={small} />,
     <div key="v" className="flex flex-col gap-1">
-      <VenueFilter counts={venueCounts} selected={raw.venues} onChange={v => set({ venues: v })} />
+      <VenueFilter counts={venueCounts} families={venueFamilies} selected={raw.venues} onChange={v => set({ venues: v })} />
       <select value={raw.kind} onChange={e => set({ kind: e.target.value as Filters['kind'] })} className={small} aria-label="Type">
         <option value="">All types</option>{KINDS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
       </select>

@@ -30,6 +30,14 @@ export function kindOf(venue: string): Kind {
   return 'published'
 }
 
+/** "ECCV 2024" -> "ECCV", "ICLR 2026 (submission)" -> "ICLR", "VTC 2024-Fall" -> "VTC"; journals stay as they are. */
+export function venueFamily(venue: string): string {
+  return venue.replace(/\s*\((submission|withdrawn|desk rejected)\)$/i, '').replace(/\s+(19|20)\d{2}(-(Spring|Fall))?$/, '').trim()
+}
+/** A venue filter value: an exact venue, or "@ECCV" for every year of a family. */
+export const FAMILY = '@'
+export const venueLabel = (v: string) => v.startsWith(FAMILY) ? `${v.slice(1)} (all years)` : v
+
 type Row = [string, string[] | string, string, string, Record<string, string>, string, string, [string, string][]?]
 
 export async function loadPapers(key: string): Promise<Paper[]> {
