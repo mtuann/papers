@@ -6,6 +6,7 @@ export interface Paper {
   title: string; authors: string; date: string; venue: string
   links: [string, string][]; code: string; seen: string; year: string
   also: [string, string][]   // other versions of the same work: [venue, url]
+  kind: Kind
 }
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -19,6 +20,16 @@ export async function loadTopics(): Promise<Topic[]> {
   return r.ok ? r.json() : []
 }
 
+export type Kind = 'published' | 'preprint' | 'other'
+const REPOSITORY = /^(zenodo|figshare|research square|ssrn|ssrn electronic journal|osf preprints|hal|doaj|biorxiv|medrxiv|techrxiv|preprints\.org|authorea|engrxiv|psyarxiv|qeios|deleted journal)$|universit|repository|thesis|dissertation/
+/** Same classes as crawler/dedupe.py rank(): published venue / preprint or submission / repository or unknown. */
+export function kindOf(venue: string): Kind {
+  const v = venue.toLowerCase()
+  if (!v || REPOSITORY.test(v)) return 'other'
+  if (v === 'arxiv' || /\((submission|withdrawn|desk rejected)\)$/.test(v)) return 'preprint'
+  return 'published'
+}
+
 type Row = [string, string[] | string, string, string, Record<string, string>, string, string, [string, string][]?]
 
 export async function loadPapers(key: string): Promise<Paper[]> {
@@ -26,8 +37,9 @@ export async function loadPapers(key: string): Promise<Paper[]> {
   if (!r.ok) return []
   const { papers } = (await r.json()) as { papers: Row[] }
   return papers.map(([title, authors, date, venue, links, code, seen, also]) => ({
-    title, date, venue, code, seen, also: also || [],
-    authors: Array.isArray(authors) ? authors.join(', ') : authors,
+    title, date, venue, code, seen, also: also || [], kind: kindOf(venue),
+    // double-blind submissions have no authors until the venue decides
+    authors: (Array.isArray(authors) ? authors.join(', ') : authors) || (/submission\)$/i.test(venue) ? 'Anonymous (under review)' : ''),
     links: Object.entries(links),
     year: date.slice(0, 4),
   }))

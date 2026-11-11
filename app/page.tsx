@@ -5,14 +5,15 @@ import PaperCard from '@/components/PaperCard'
 import PaperTable, { SortKey, SortState } from '@/components/PaperTable'
 import VenueFilter from '@/components/VenueFilter'
 import { Download, Search } from '@/components/icons'
-import { loadPapers, loadTopics, Paper, Topic, topicColor } from '@/lib/data'
+import { Kind, loadPapers, loadTopics, Paper, Topic, topicColor } from '@/lib/data'
 
 type View = 'table' | 'cards'
 interface Filters {
   q: string; title: string; author: string; venues: string[]
-  y1: string; y2: string; source: string; code: boolean
+  y1: string; y2: string; source: string; code: boolean; kind: '' | Kind
 }
-const EMPTY: Filters = { q: '', title: '', author: '', venues: [], y1: '', y2: '', source: '', code: false }
+const EMPTY: Filters = { q: '', title: '', author: '', venues: [], y1: '', y2: '', source: '', code: false, kind: '' }
+const KINDS: [Kind, string][] = [['published', 'Published'], ['preprint', 'Preprints & submissions'], ['other', 'Repositories & other']]
 
 function useDebounced<T>(v: T, ms = 200) {
   const [d, setD] = useState(v)
@@ -28,7 +29,8 @@ function match(p: Paper, f: Filters, skipVenue = false) {
     (skipVenue || !f.venues.length || f.venues.includes(p.venue)) &&
     (!f.y1 || p.year >= f.y1) && (!f.y2 || p.year <= f.y2) &&
     (!f.source || p.links.some(l => l[0] === f.source)) &&
-    (!f.code || p.code.includes('github.com'))
+    (!f.code || p.code.includes('github.com')) &&
+    (!f.kind || p.kind === f.kind)
 }
 
 function toCsv(rows: Paper[]) {
@@ -64,7 +66,8 @@ export default function Home() {
     const p = new URLSearchParams(window.location.search)
     setRaw({ q: p.get('q') || '', title: p.get('ti') || '', author: p.get('au') || '',
       venues: p.get('v') ? p.get('v')!.split('|') : [], y1: p.get('y1') || '', y2: p.get('y2') || '',
-      source: p.get('src') || '', code: p.get('code') === '1' })
+      source: p.get('src') || '', code: p.get('code') === '1',
+      kind: (['published', 'preprint', 'other'].includes(p.get('kind') || '') ? p.get('kind') : '') as Filters['kind'] })
     const [k, d] = (p.get('sort') || 'date.desc').split('.')
     setSort({ key: (k as SortKey) || 'date', dir: d === 'asc' ? 'asc' : 'desc' })
     let v = p.get('view') as View | null
@@ -87,7 +90,7 @@ export default function Home() {
     const p = new URLSearchParams({ topic })
     const put = (k: string, v: string) => v && p.set(k, v)
     put('q', f.q); put('ti', f.title); put('au', f.author); put('v', f.venues.join('|'))
-    put('y1', f.y1); put('y2', f.y2); put('src', f.source); put('code', f.code ? '1' : '')
+    put('y1', f.y1); put('y2', f.y2); put('src', f.source); put('code', f.code ? '1' : ''); put('kind', f.kind)
     if (sort.key !== 'date' || sort.dir !== 'desc') p.set('sort', `${sort.key}.${sort.dir}`)
     p.set('view', view)
     window.history.replaceState(null, '', `?${p.toString()}`)
@@ -133,6 +136,7 @@ export default function Home() {
   if (raw.y1 || raw.y2) chips.push([`${raw.y1 || '…'}–${raw.y2 || '…'}`, () => set({ y1: '', y2: '' })])
   if (raw.source) chips.push([`source: ${raw.source}`, () => set({ source: '' })])
   if (raw.code) chips.push(['with code', () => set({ code: false })])
+  if (raw.kind) chips.push([KINDS.find(k => k[0] === raw.kind)![1].toLowerCase(), () => set({ kind: '' })])
 
   const small = 'input !h-8 w-full !px-2 text-xs'
   const yearSel = (val: string, k: 'y1' | 'y2', ph: string) => (
@@ -144,7 +148,12 @@ export default function Home() {
     <div key="d" className="flex gap-1 [&>select]:min-w-0 [&>select]:flex-1">{yearSel(raw.y1, 'y1', 'from')}{yearSel(raw.y2, 'y2', 'to')}</div>,
     <input key="t" value={raw.title} onChange={e => set({ title: e.target.value })} placeholder="Filter title…" className={small} />,
     <input key="a" value={raw.author} onChange={e => set({ author: e.target.value })} placeholder="Filter author…" className={small} />,
-    <VenueFilter key="v" counts={venueCounts} selected={raw.venues} onChange={v => set({ venues: v })} />,
+    <div key="v" className="flex flex-col gap-1">
+      <VenueFilter counts={venueCounts} selected={raw.venues} onChange={v => set({ venues: v })} />
+      <select value={raw.kind} onChange={e => set({ kind: e.target.value as Filters['kind'] })} className={small} aria-label="Type">
+        <option value="">All types</option>{KINDS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
+      </select>
+    </div>,
     <select key="s" value={raw.source} onChange={e => set({ source: e.target.value })} className={small} aria-label="Source">
       <option value="">All</option>{sources.map(s => <option key={s}>{s}</option>)}
     </select>,
