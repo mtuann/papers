@@ -34,7 +34,7 @@ export default function PaperTable({ rows, sort, onSort, filters, newSince }: {
             return (
               <tr key={p.title + i} className="border-b border-line/70 align-top last:border-0 hover:bg-accent-soft/40 dark:border-line-dark/70 dark:hover:bg-accent-softdark/40">
                 <td className="whitespace-nowrap px-3 py-2.5 tabular-nums muted">
-                  {p.date}{p.seen >= newSince && <span className="mt-1 block w-fit rounded bg-emerald-50 px-1 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">NEW</span>}
+                  {p.date}{p.first && <span className="block text-[11px]" title="First appeared (preprint)">arXiv: {p.first}</span>}{p.seen >= newSince && <span className="mt-1 block w-fit rounded bg-emerald-50 px-1 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">NEW</span>}
                 </td>
                 <td className="px-3 py-2.5">
                   <Clamp text={p.title} lines={3} className="font-medium leading-snug">

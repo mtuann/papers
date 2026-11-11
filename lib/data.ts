@@ -6,6 +6,7 @@ export interface Paper {
   title: string; authors: string; date: string; venue: string
   links: [string, string][]; code: string; seen: string; year: string
   also: [string, string][]   // other versions of the same work: [venue, url]
+  first: string              // first appearance (arXiv) when `date` is the published version's date, else ''
   kind: Kind
 }
 
@@ -38,14 +39,14 @@ export function venueFamily(venue: string): string {
 export const FAMILY = '@'
 export const venueLabel = (v: string) => v.startsWith(FAMILY) ? `${v.slice(1)} (all years)` : v
 
-type Row = [string, string[] | string, string, string, Record<string, string>, string, string, [string, string][]?]
+type Row = [string, string[] | string, string, string, Record<string, string>, string, string, [string, string][]?, string?]
 
 export async function loadPapers(key: string): Promise<Paper[]> {
   const r = await fetch(dataUrl(`${key}.json`), FRESH)
   if (!r.ok) return []
   const { papers } = (await r.json()) as { papers: Row[] }
-  return papers.map(([title, authors, date, venue, links, code, seen, also]) => ({
-    title, date, venue, code, seen, also: also || [], kind: kindOf(venue),
+  return papers.map(([title, authors, date, venue, links, code, seen, also, first]) => ({
+    title, date, venue, code, seen, also: also || [], first: first || '', kind: kindOf(venue),
     // double-blind submissions have no authors until the venue decides
     authors: (Array.isArray(authors) ? authors.join(', ') : authors) || (/submission\)$/i.test(venue) ? 'Anonymous (under review)' : ''),
     links: Object.entries(links),
