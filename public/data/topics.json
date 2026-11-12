@@ -7,7 +7,7 @@
   "with_code": 723,
   "new_30d": 6626,
   "repo": "mtuann/llm-serving-papers",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  },
  {
   "key": "rag",
@@ -17,7 +17,7 @@
   "with_code": 1359,
   "new_30d": 22622,
   "repo": "mtuann/rag-papers",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  },
  {
   "key": "agent_cdn",
@@ -27,7 +27,7 @@
   "with_code": 23,
   "new_30d": 459,
   "repo": "mtuann/agent-cdn-papers",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  },
  {
   "key": "backdoor_attack",
@@ -37,7 +37,7 @@
   "with_code": 439,
   "new_30d": 1212,
   "repo": "mtuann/backdoor-ai-resources",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  },
  {
   "key": "unlearning",
@@ -47,16 +47,16 @@
   "with_code": 357,
   "new_30d": 1538,
   "repo": "mtuann/machine-unlearning-papers",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  },
  {
   "key": "federated",
   "title": "Federated Learning",
   "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
-  "count": 38101,
-  "with_code": 1090,
-  "new_30d": 9034,
+  "count": 37935,
+  "with_code": 1083,
+  "new_30d": 9024,
   "repo": "mtuann/federated-learning-updated-papers",
-  "updated": "2026-11-11"
+  "updated": "2026-11-12"
  }
 ]
