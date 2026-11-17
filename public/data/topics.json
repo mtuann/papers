@@ -3,60 +3,60 @@
   "key": "llm_serving",
   "title": "LLM Serving",
   "about": "Systems for serving large language models: request scheduling and SLOs, KV-cache and in-context caching, speculative decoding, disaggregated prefill/decode, and RAG / compound-AI serving.",
-  "count": 6626,
-  "with_code": 723,
-  "new_30d": 6626,
+  "count": 6723,
+  "with_code": 734,
+  "new_30d": 6723,
   "repo": "mtuann/llm-serving-papers",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  },
  {
   "key": "rag",
   "title": "RAG",
   "about": "Retrieval-augmented generation: retrievers and indexes for LLMs, RAG pipelines, GraphRAG, agentic and multimodal RAG, evaluation, robustness and security.",
-  "count": 22622,
-  "with_code": 1359,
-  "new_30d": 22622,
+  "count": 22862,
+  "with_code": 1366,
+  "new_30d": 22862,
   "repo": "mtuann/rag-papers",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  },
  {
   "key": "agent_cdn",
   "title": "Agent CDN",
   "about": "Content-delivery and network infrastructure for LLMs and AI agents: KV-cache and knowledge delivery networks, edge, in-network and semantic caching, web caches for agent and crawler traffic, and the agentic web.",
-  "count": 459,
-  "with_code": 23,
-  "new_30d": 459,
+  "count": 469,
+  "with_code": 24,
+  "new_30d": 469,
   "repo": "mtuann/agent-cdn-papers",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  },
  {
   "key": "backdoor_attack",
   "title": "Backdoor Learning",
   "about": "Backdoor (trojan) attacks on machine-learning models and defenses against them, including federated and LLM settings.",
-  "count": 4505,
+  "count": 4523,
   "with_code": 439,
-  "new_30d": 1212,
+  "new_30d": 1230,
   "repo": "mtuann/backdoor-ai-resources",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  },
  {
   "key": "unlearning",
   "title": "Machine Unlearning",
   "about": "Removing the influence of specific data from trained models: exact and approximate unlearning, evaluation and LLM unlearning.",
-  "count": 3764,
-  "with_code": 357,
-  "new_30d": 1538,
+  "count": 3781,
+  "with_code": 358,
+  "new_30d": 1555,
   "repo": "mtuann/machine-unlearning-papers",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  },
  {
   "key": "federated",
   "title": "Federated Learning",
   "about": "Training models across many clients without sharing raw data: optimization, heterogeneity, privacy, robustness and systems.",
-  "count": 37935,
-  "with_code": 1083,
-  "new_30d": 9024,
+  "count": 38126,
+  "with_code": 1093,
+  "new_30d": 9215,
   "repo": "mtuann/federated-learning-updated-papers",
-  "updated": "2026-11-12"
+  "updated": "2026-11-17"
  }
 ]
